@@ -16,6 +16,22 @@ jobs:
           chef install policyfiles/db-server.rb && chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
           chef install policyfiles/web-server.rb && chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
           
+  Setup-Terraform:
+    runs-on: self-hosted
+    steps:
+      - name: Terraform Installed?
+        continue-on-error: true
+        id: check-terraform
+        run: terraform -v
+
+      - name: Installing Terraform on the runner
+        if: steps.check-terraform.outcome == 'failure'
+        run: |
+          sudo yum install -y yum-utils
+          sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+          sudo yum -y install terraform
+          terraform -v
+
   Terraform-Apply:
     runs-on: self-hosted
     needs: Push-Policyfile
@@ -27,7 +43,7 @@ jobs:
         run: |
           knife node list -c .chef/config.rb | grep "aws" | xargs knife node delete -y -c .chef/config.rb || echo "node deletion failed somehow"
           knife client list -c .chef/config.rb | grep "aws" | xargs knife client delete -y -c .chef/config.rb || echo "client delete failed somehow"
-      
+
       - name: Running Terraform
         run: |
           terraform init
