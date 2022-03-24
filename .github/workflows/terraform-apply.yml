@@ -15,9 +15,10 @@ jobs:
           chef policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
           chef install policyfiles/db-server.rb && chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
           chef install policyfiles/web-server.rb && chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
-          
+
   Setup-Terraform:
     runs-on: self-hosted
+    needs: Push-Policyfile
     steps:
       - name: Terraform Installed?
         continue-on-error: true
@@ -34,7 +35,7 @@ jobs:
 
   Terraform-Apply:
     runs-on: self-hosted
-    needs: Push-Policyfile
+    needs: Setup-Terraform
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -15,7 +15,7 @@ resource "aws_instance" "instance" {
   count         = 5
   ami           = "ami-066136c75998a0ef3"
   instance_type = "t2.large"
-  vpc_security_group_ids = "vpc-87610aee"
+  # vpc_security_group_ids = "vpc-87610aee"
   subnet_id = "subnet-130aaf5e"
   key_name = "r-goto_osaka_ed25519"
   tags = {
