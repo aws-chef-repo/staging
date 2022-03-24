@@ -18,6 +18,8 @@ jobs:
           rm -rf policyfiles/*.lock.json
           chef policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
           chef policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
+          chef install policyfiles/db-server.rb
+          chef install policyfiles/web-server.rb
           chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
           chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
           
