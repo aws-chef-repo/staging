@@ -13,16 +13,14 @@ provider "aws" {
 
 resource "aws_instance" "instance" {
   count         = 5
-  ami           = "ami-06a903fe36ee2cb4c"
+  ami           = "ami-066136c75998a0ef3"
   instance_type = "t2.large"
-  vpc_security_group_ids = [
-    "sg-0803dfbfc0c77a2f4",
-  ]
+  vpc_security_group_ids = "vpc-87610aee"
   subnet_id = "subnet-130aaf5e"
-  key_name = "r-goto-osaka"
+  key_name = "r-goto_osaka_ed25519"
   tags = {
     Owner = "r-goto"
-    Name = format("chef-terraform-demo-node%02d", count.index + 1)
+    Name = format("chef-RHEL8-node%02d", count.index + 1)
     Project = "chef-demo"
   }
 
@@ -35,7 +33,7 @@ resource "aws_instance" "instance" {
       host = self.public_ip
       user = "ec2-user"
       type = "ssh"
-      private_key = file("/home/r-goto/r-goto_aws-osaka.pem")
+      private_key = file("/home/ec2-user/aws-r-goto_osaka_ed25519.pem")
       timeout = "10m"
     }
   }
