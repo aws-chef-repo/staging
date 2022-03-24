@@ -11,10 +11,10 @@ jobs:
       - name: Pushing Policyfile to ChefServer
         run: |
           rm -rf policyfiles/*.lock.json
-          chef update policyfiles/db-server.rb -c .chef/config.rb
-          chef update policyfiles/web-server.rb -c .chef/config.rb
-          chef push aws policyfiles/db-server.rb -c .chef/config.rb
-          chef push aws policyfiles/web-server.rb -c .chef/config.rb
+          chef --chef-license accept update policyfiles/db-server.rb -c .chef/config.rb
+          chef --chef-license accept update policyfiles/web-server.rb -c .chef/config.rb
+          chef --chef-license accept push aws policyfiles/db-server.rb -c .chef/config.rb
+          chef --chef-license accept push aws policyfiles/web-server.rb -c .chef/config.rb
           
   Terraform-Apply:
     runs-on: self-hosted
