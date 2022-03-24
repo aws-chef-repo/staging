@@ -16,10 +16,10 @@ jobs:
       - name: Pushing Policyfile to ChefServer
         run: |
           rm -rf policyfiles/*.lock.json
-          chef --chef-license accept update policyfiles/db-server.rb -c .chef/config.rb
-          chef --chef-license accept update policyfiles/web-server.rb -c .chef/config.rb
-          chef --chef-license accept push aws policyfiles/db-server.rb -c .chef/config.rb
-          chef --chef-license accept push aws policyfiles/web-server.rb -c .chef/config.rb
+          chef policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
+          chef policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
+          chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
+          chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
           
   Converge-Nodes:
     runs-on: self-hosted
