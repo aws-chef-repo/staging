@@ -12,10 +12,9 @@ provider "aws" {
 }
 
 resource "aws_instance" "instance" {
-  count         = 5
+  count         = var.instance_count
   ami           = "ami-066136c75998a0ef3"
-  instance_type = "t2.large"
-  # vpc_security_group_ids = "vpc-87610aee"
+  instance_type = "c5d.2xlarge"
   subnet_id = "subnet-130aaf5e"
   key_name = "r-goto_osaka_ed25519"
   tags = {
@@ -26,16 +25,20 @@ resource "aws_instance" "instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo hostnamectl set-hostname AWS-node_`uuidgen | grep -o '..$'`",
-      "sudo chef-client"
+      "sudo hostnamectl set-hostname ${self.tags.Name}",  # AWS-node_`uuidgen | grep -o '..$'`",
     ]
     connection {
       host = self.public_ip
       user = "ec2-user"
       type = "ssh"
-      private_key = file("/home/ec2-user/aws-r-goto_osaka_ed25519.pem")
+      private_key = var.ssh_key_file #file("/home/ec2-user/aws-r-goto_osaka_ed25519.pem")
       timeout = "10m"
     }
+  }
+  provisioner "local-exec" {
+    command = <<-LOCAL
+      knife bootstrap ${var.user_name}@${self.public_ip} -N ${self.tags.Name} -i ${var.ssh_key_file} --sudo --policy-group ${var.policy_group} --policy-name ${var.policy_name} -y
+    LOCAL
   }
 }
 
