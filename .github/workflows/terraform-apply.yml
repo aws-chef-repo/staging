@@ -1,4 +1,4 @@
-name: Terraform Apply + Bootstrapping
+name: Terraform + Bootstrapping
 
 on: workflow_dispatch
 
