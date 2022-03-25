@@ -1,4 +1,4 @@
-name: Terraform Apply w/ Chef
+name: Terraform Apply + Bootstrapping
 
 on: workflow_dispatch
 
