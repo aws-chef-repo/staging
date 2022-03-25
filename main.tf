@@ -31,7 +31,7 @@ resource "aws_instance" "instance" {
       host = self.public_ip
       user = "ec2-user"
       type = "ssh"
-      private_key = var.ssh_key_file #file("/home/ec2-user/aws-r-goto_osaka_ed25519.pem")
+      private_key = file(var.ssh_key_file)
       timeout = "10m"
     }
   }
