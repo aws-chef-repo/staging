@@ -13,7 +13,7 @@ jobs:
         run: |
           terraform -v
           chef -v
-          terraform init
+          terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
           terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
 
       - name: Cleaning up node/client on Chef ChefServer
