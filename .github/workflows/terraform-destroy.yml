@@ -14,8 +14,7 @@ jobs:
           terraform -v
           chef -v
           terraform init
-          terraform apply -destroy --auto-approve -lock=false -var-file="web-server.tfvars" 
-          terraform apply -destroy --auto-approve -lock=false -var-file="db-server.tfvars"
+          terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
 
       - name: Cleaning up node/client on Chef ChefServer
         run: |
