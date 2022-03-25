@@ -3,7 +3,7 @@
 # For more information on the Policyfile feature, visit
 # https://docs.chef.io/policyfile/
 
-name 'db-server'
+name 'db'
 default_source :chef_server, 'https://chef-automate.creationline.com/organizations/first-org'
 run_list 'node_setup::default'#, 'postgresql_setup::default'
 cookbook 'node_setup', '1.0.0'
@@ -14,7 +14,7 @@ cookbook 'postgresql_setup', '1.0.0'
 ##########
 
 # Specify Policy name & Policy group
-override['node_setup']['policy_name'] = 'db-server'
+override['node_setup']['policy_name'] = 'db'
 override['node_setup']['policy_group'] = 'aws'
 
 # Specify chef-client version

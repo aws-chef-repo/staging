@@ -3,7 +3,7 @@
 # For more information on the Policyfile feature, visit
 # https://docs.chef.io/policyfile/
 
-name 'web-server'
+name 'web'
 default_source :chef_server, 'https://chef-automate.creationline.com/organizations/first-org'
 run_list 'node_setup::default'#, 'nginx_setup::default'
 cookbook 'node_setup', '1.0.0'
@@ -17,7 +17,7 @@ cookbook 'nginx_setup', '2.0.0'
 override['node_setup']['timezone'] = 'Asia/Tokyo'
 
 # Specify Policy name & Policy group
-override['node_setup']['policy_name'] = 'web-server'
+override['node_setup']['policy_name'] = 'web'
 override['node_setup']['policy_group'] = 'aws'
 
 # Specify chef-client version
