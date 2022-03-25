@@ -16,10 +16,11 @@ resource "aws_instance" "instance" {
   ami           = "ami-066136c75998a0ef3"
   instance_type = "c5d.2xlarge"
   subnet_id = "subnet-130aaf5e"
+  vpc_security_group_ids = [ "sg-0803dfbfc0c77a2f4" ]
   key_name = "r-goto_osaka_ed25519"
   tags = {
     Owner = "r-goto"
-    Name = format("chef-RHEL8-node%02d", count.index + 1)
+    Name = format("chef-RHEL8-${var.policy_name}%02d", count.index + 1)
     Project = "chef-demo"
   }
 
