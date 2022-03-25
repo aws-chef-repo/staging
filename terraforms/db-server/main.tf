@@ -20,13 +20,13 @@ resource "aws_instance" "instance" {
   key_name = "r-goto_osaka_ed25519"
   tags = {
     Owner = "r-goto"
-    Name = format("chef-RHEL8-${var.policy_name}%02d", count.index + 1)
+    Name = format("RHEL8-${var.policy_name}%02d-demo", count.index + 1)
     Project = "chef-demo"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "sudo hostnamectl set-hostname ${self.tags.Name}",  # AWS-node_`uuidgen | grep -o '..$'`",
+      "sudo hostnamectl set-hostname ${var.policy_name}",  # AWS-node_`uuidgen | grep -o '..$'`",
     ]
     connection {
       host = self.public_ip

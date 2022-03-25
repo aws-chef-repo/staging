@@ -18,5 +18,5 @@ jobs:
 
       - name: Cleaning up node/client on Chef ChefServer
         run: |
-          knife node list -c .chef/config.rb | grep "aws" | xargs knife node delete -y -c .chef/config.rb || echo "node deletion failed somehow"
-          knife client list -c .chef/config.rb | grep "aws" | xargs knife client delete -y -c .chef/config.rb || echo "client delete failed somehow"
+          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb || echo "node deletion failed somehow"
+          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb || echo "client delete failed somehow"
