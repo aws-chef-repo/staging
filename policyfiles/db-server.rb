@@ -18,7 +18,7 @@ override['node_setup']['policy_name'] = 'db'
 override['node_setup']['policy_group'] = 'aws'
 
 # Specify chef-client version
-override['node_setup']['chef_client']['version'] = '17.10'
+override['node_setup']['chef_client']['version'] = '17.9.52'
 override['node_setup']['chef_client']['channel'] = 'stable'
 
 # Specify node Time Zone
