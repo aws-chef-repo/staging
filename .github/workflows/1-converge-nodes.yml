@@ -12,8 +12,8 @@ jobs:
   Push-Policyfile:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v2
       - name: Pushing Policyfile to ChefServer
+      - uses: actions/checkout@v2
         run: |
           rm -rf policyfiles/*.lock.json
           chef policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
