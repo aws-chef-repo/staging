@@ -10,6 +10,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - name: Destroying AWS Instances
+      - uses: actions/checkout@v2
         run: |
           terraform -v
           chef -v
