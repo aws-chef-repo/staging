@@ -4,21 +4,21 @@ on: workflow_dispatch
 
 jobs:
 
-  Push-Policyfile:
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v2
-      - name: Pushing Policyfile to ChefServer
-        run: |
-          rm -rf policyfiles/*.lock.json
-          chef policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
-          chef policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
-          chef install policyfiles/db-server.rb && chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
-          chef install policyfiles/web-server.rb && chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
+#   Push-Policyfile:
+#     runs-on: self-hosted
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Pushing Policyfile to ChefServer
+#         run: |
+#           rm -rf policyfiles/*.lock.json
+#           chef policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
+#           chef policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
+#           chef install policyfiles/db-server.rb && chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
+#           chef install policyfiles/web-server.rb && chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
 
   Terraform-Apply-Bootstrapping:
     runs-on: self-hosted
-    needs: Push-Policyfile
+#     needs: Push-Policyfile
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
