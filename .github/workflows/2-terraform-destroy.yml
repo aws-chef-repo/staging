@@ -1,4 +1,4 @@
-name: Destroy All Instances
+name: 2:Destroy All Instances
 
 on: workflow_dispatch
 
