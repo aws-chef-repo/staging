@@ -13,7 +13,7 @@ provider "aws" {
 
 resource "aws_instance" "instance" {
   count         = var.instance_count
-  ami           = "ami-0996e8453a17695fb"
+  ami           = "ami-09b7cbc7de5c95f63"
   instance_type = "c5d.2xlarge"
   subnet_id = "subnet-130aaf5e"
   vpc_security_group_ids = [ "sg-0803dfbfc0c77a2f4" ]
