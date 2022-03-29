@@ -3,19 +3,27 @@ name: 0:Terraform + Bootstrapping
 on: workflow_dispatch
 
 jobs:
-  # Terraform-Bootstrapping-Web:
-  #   runs-on: self-hosted
-  #   env:
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #   steps :
-  #     - uses: actions/checkout@v2
-  #     - name: Running Terraform
-  #       continue-on-error: true
-  #       id: terraform-apply
-  #       run: |
-  #         terraform -chdir=terraforms/web-server init
-  #         terraform -chdir=terraforms/web-server apply --auto-approve -var-file="web-server.tfvars"
+  Terraform-Bootstrapping-WEB:
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: ./terraforms/web-server
+    steps :
+      - uses: actions/checkout@v2
+      - name: Running Terraform
+        continue-on-error: true
+        id: terraform-apply-web
+        run: |
+          terraform init
+          terraform apply --auto-approve -var-file="web-server.tfvars"
+  
+  # デプロイエラー時にクリーンアップを実行する。
+      - name: Cleanp 
+        if: steps.terraform-apply-web.outcome != 'success'
+        run: |
+          terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
+          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
+          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
   
   Terraform-Bootstrapping-DB:
     runs-on: self-hosted
@@ -26,16 +34,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Running Terraform
         continue-on-error: true
-        id: terraform-apply
+        id: terraform-apply-db
         run: |
           terraform init
           terraform apply --auto-approve -var-file="db-server.tfvars"
   
   # デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 
-        if: steps.terraform-apply.outcome != 'success'
+        if: steps.terraform-apply-db.outcome != 'success'
         run: |
-          terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
-          terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
+          terraform apply -destroy --auto-approve -var-file="db-server.tfvars"
           knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
           knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb

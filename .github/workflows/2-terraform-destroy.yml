@@ -3,21 +3,35 @@ name: 2:Destroy All Instances
 on: workflow_dispatch
 
 jobs:     
-  Terraform-Destroy:
+  Terraform-Destroy-WEB:
     runs-on: self-hosted
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    defaults:
+      run:
+        working-directory: ./terraforms/web-server
     steps:
       - uses: actions/checkout@v2
-      - name: Destroying AWS Instances
+      - name: Cleanp 
         run: |
-          terraform -v
-          chef -v
-          terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
-          terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
+          terrform init
+          terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
 
-      - name: Cleaning up node/client on Chef ChefServer
+  Terraform-Destroy-DB:
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: ./terraforms/db-server
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cleanp 
         run: |
-          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb || echo "node deletion failed somehow"
-          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb || echo "client delete failed somehow"
+          terrform init
+          terraform apply -destroy --auto-approve -var-file="db-server.tfvars"
+
+  Chef-Cleanup:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cleanp 
+        run: |
+          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
+          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
