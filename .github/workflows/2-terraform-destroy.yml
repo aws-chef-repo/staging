@@ -8,8 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Cleanp 
-        run: |
-          
+        working-directory: ./terraforms/web-server
+        run: terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
 
   Chef-Cleanup:
     runs-on: self-hosted

@@ -8,19 +8,32 @@ jobs:
     steps :
       - uses: actions/checkout@v2
       - name: Terraform + Bootstrapping
-        working-directory: ./terraforms
+        working-directory: ./terraforms/web-server
         continue-on-error: true
         id: terraform-apply
         run: |
-          terraform -chdir=web-server init
-          terraform -chdir=db-server init
-          nohup terraform -chdir=db-server apply -lock=false --auto-approve -var-file="db-server.tfvars" &
-          terraform -chdir=web-server apply -lock=false --auto-approve -var-file="web-server.tfvars"
+          terraform init
+          terraform apply --auto-approve -var-file="web-server.tfvars"
 
   # Web デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 
         if: steps.terraform-apply.outcome != 'success'
         run: |
           terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
+          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
+          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
+  Chef-Cleanup:
+    runs-on: self-hosted
+    environment:
+      name: cleanup
+      url: https://github.com
+    steps:
+      - uses: actions/checkout@v2
+      - name: Terraform Cleanp 
+        working-directory: ./terraforms/web-server
+        run: terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
+      - uses: actions/checkout@v2
+      - name: Cleanp 
+        run: |
           knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
           knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
