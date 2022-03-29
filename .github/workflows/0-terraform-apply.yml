@@ -15,7 +15,7 @@ jobs:
         id: terraform-apply-web
         run: |
           terraform init
-          terraform apply --auto-approve -var-file="web-server.tfvars"
+          terraform apply -lock=false --auto-approve -var-file="web-server.tfvars"
   
   # デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 
@@ -37,7 +37,7 @@ jobs:
         id: terraform-apply-db
         run: |
           terraform init
-          terraform apply --auto-approve -var-file="db-server.tfvars"
+          terraform apply -lock=false --auto-approve -var-file="db-server.tfvars"
   
   # デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 
