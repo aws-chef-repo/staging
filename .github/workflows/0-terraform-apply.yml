@@ -22,16 +22,18 @@ jobs:
           terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
           knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
           knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
-  Chef-Cleanup:
+  
+  Cleanup:
     runs-on: self-hosted
     environment:
       name: cleanup
-      url: https://github.com
     steps:
       - uses: actions/checkout@v2
       - name: Terraform Cleanp 
         working-directory: ./terraforms/web-server
-        run: terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
+        run: |
+          terraform init
+          terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
       - uses: actions/checkout@v2
       - name: Cleanp 
         run: |
