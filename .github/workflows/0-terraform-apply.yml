@@ -14,14 +14,6 @@ jobs:
         run: |
           terraform init
           terraform apply --auto-approve -var-file="web-server.tfvars"
-
-  # Web デプロイエラー時にクリーンアップを実行する。
-      - name: Cleanp 
-        if: steps.terraform-apply.outcome != 'success'
-        run: |
-          terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
-          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
-          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
   
   Cleanup:
     runs-on: self-hosted

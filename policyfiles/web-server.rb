@@ -5,8 +5,7 @@
 
 name 'web'
 default_source :chef_server, 'https://chef-automate.creationline.com/organizations/aws-org'
-# run_list 'node_setup::default', 'nginx_setup::default'
-run_list 'nginx_setup::default'
+run_list 'node_setup::default', 'nginx_setup::default'
 cookbook 'node_setup', '1.0.0'
 cookbook 'nginx_setup', '1.0.0'
 
