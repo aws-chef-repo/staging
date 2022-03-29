@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Running Terraform
+        id: terraform-apply
         run: |
           terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
           terraform -chdir=terraforms/web-server apply --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply --auto-approve -var-file="db-server.tfvars"
@@ -18,7 +19,7 @@ jobs:
   # デプロイエラー時にクリーンアップを実行する。
   Cleanup:
     runs-on: self-hosted
-    if: jobs.Terraform-Apply-Bootstrapping.outcome == "failure"
+    if: steps.terraform-apply.outcome == "failure"
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
