@@ -19,10 +19,9 @@ jobs:
   
   Terraform-Bootstrapping-DB:
     runs-on: self-hosted
-    env:
-      working-diretroy: ./terraforms/db-server/
-      # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    defaults:
+      run:
+        working-directory: ./terraforms/db-server
     steps :
       - uses: actions/checkout@v2
       - name: Running Terraform
