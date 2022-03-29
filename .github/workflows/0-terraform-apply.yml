@@ -18,7 +18,7 @@ jobs:
 
   # デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 
-        if: steps.terraform-apply.outcome == "failure"
+        if: steps.terraform-apply.outcome == 'failure'
         run: |
           terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
           terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
