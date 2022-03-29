@@ -7,15 +7,15 @@ jobs:
     runs-on: self-hosted
     steps :
       - uses: actions/checkout@v2
-      - name: Web Server 
+      - name: Terraform + Bootstrapping
         working-directory: ./terraforms
         continue-on-error: true
         id: terraform-apply
         run: |
           terraform -chdir=web-server init
           terraform -chdir=db-server init
-          nohup terraform -chdir=web-server apply -lock=false --auto-approve -var-file="web-server.tfvars" &
-          nohup terraform -chdir=db-server apply -lock=false --auto-approve -var-file="db-server.tfvars" &
+          terraform -chdir=db-server apply -lock=false --auto-approve -var-file="db-server.tfvars" &
+          terraform -chdir=web-server apply -lock=false --auto-approve -var-file="web-server.tfvars"
 
   # Web デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 

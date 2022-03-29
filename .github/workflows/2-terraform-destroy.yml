@@ -12,7 +12,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Cleanp 
         run: |
-          terraform init
           terraform apply -lock=false -destroy --auto-approve -var-file="web-server.tfvars"
 
   Terraform-Destroy-DB:
@@ -24,7 +23,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Cleanp 
         run: |
-          terraform init
           terraform apply -lock=false -destroy --auto-approve -var-file="db-server.tfvars"
 
   Chef-Cleanup:
