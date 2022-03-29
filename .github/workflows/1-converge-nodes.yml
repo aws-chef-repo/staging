@@ -16,8 +16,8 @@ jobs:
       - name: Pushing Policyfile to ChefServer
         run: |
           rm -rf policyfiles/*.lock.json
-          chef policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
-          chef policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
+          chef update policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
+          chef update policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
           chef install policyfiles/db-server.rb && chef push aws policyfiles/db-server.rb -c .chef/config.rb --chef-license accept
           chef install policyfiles/web-server.rb && chef push aws policyfiles/web-server.rb -c .chef/config.rb --chef-license accept
           
