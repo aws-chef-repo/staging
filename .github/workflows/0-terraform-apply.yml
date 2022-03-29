@@ -23,5 +23,5 @@ jobs:
         run: |
           terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
           terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
-          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb || echo "node deletion failed somehow"
-          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb || echo "client delete failed somehow"
+          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
+          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
