@@ -14,7 +14,7 @@ jobs:
         run: |
           terraform -chdir=web-server init
           terraform -chdir=db-server init
-          terraform -chdir=db-server apply -lock=false --auto-approve -var-file="db-server.tfvars" &
+          nohup terraform -chdir=db-server apply -lock=false --auto-approve -var-file="db-server.tfvars" &
           terraform -chdir=web-server apply -lock=false --auto-approve -var-file="web-server.tfvars"
 
   # Web デプロイエラー時にクリーンアップを実行する。

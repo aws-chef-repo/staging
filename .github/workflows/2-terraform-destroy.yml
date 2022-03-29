@@ -3,27 +3,13 @@ name: 2:Destroy All Instances
 on: workflow_dispatch
 
 jobs:     
-  Terraform-Destroy-WEB:
+  Terraform-Cleanup:
     runs-on: self-hosted
-    defaults:
-      run:
-        working-directory: ./terraforms/web-server
     steps:
       - uses: actions/checkout@v2
       - name: Cleanp 
         run: |
-          terraform apply -lock=false -destroy --auto-approve -var-file="web-server.tfvars"
-
-  Terraform-Destroy-DB:
-    runs-on: self-hosted
-    defaults:
-      run:
-        working-directory: ./terraforms/db-server
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cleanp 
-        run: |
-          terraform apply -lock=false -destroy --auto-approve -var-file="db-server.tfvars"
+          
 
   Chef-Cleanup:
     runs-on: self-hosted
