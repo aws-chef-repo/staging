@@ -33,7 +33,7 @@ jobs:
         working-directory: ./terraforms/web-server
         run: |
           terraform init
-          terraform destroy --auto-approve
+          terraform destroy --auto-approve -var-file="web-server.tfvars"
       - uses: actions/checkout@v2
       - name: Cleanp 
         run: |
