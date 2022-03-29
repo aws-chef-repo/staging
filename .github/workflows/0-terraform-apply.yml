@@ -17,21 +17,10 @@ jobs:
           terraform -chdir=terraforms/web-server apply --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply --auto-approve -var-file="db-server.tfvars"
 
   # デプロイエラー時にクリーンアップを実行する。
-  Cleanup:
-    runs-on: self-hosted
-    if: steps.terraform-apply.outcome == "failure"
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    steps: 
-      - name: Destroying AWS Instances
+      - name: Cleanp 
+        if: steps.terraform-apply.outcome == "failure"
         run: |
-          terraform -v
-          chef -v
           terraform -chdir=terraforms/web-server init & terraform -chdir=terraforms/db-server init
           terraform -chdir=terraforms/web-server apply -destroy --auto-approve -var-file="web-server.tfvars" & terraform -chdir=terraforms/db-server apply -destroy --auto-approve -var-file="db-server.tfvars"
-
-      - name: Cleaning up node/client on Chef ChefServer
-        run: |
           knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb || echo "node deletion failed somehow"
           knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb || echo "client delete failed somehow"
