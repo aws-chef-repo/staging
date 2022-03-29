@@ -8,33 +8,19 @@ jobs:
     steps :
       - uses: actions/checkout@v2
       - name: Web Server 
-        working-directory: ./terraforms/web-server
+        working-directory: ./terraforms
         continue-on-error: true
-        id: terraform-apply-web
+        id: terraform-apply
         run: |
-          terraform init
-          terraform apply -lock=false --auto-approve -var-file="web-server.tfvars"
-  
-      - name: DB Server
-        working-directory: ./terraforms/db-server
-        continue-on-error: true
-        id: terraform-apply-db
-        run: |
-          terraform init
-          terraform apply -lock=false --auto-approve -var-file="db-server.tfvars"
+          terraform -chdir=web-server init
+          terraform -chdir=db-server init
+          nohup terraform -chdir=web-server apply -lock=false --auto-approve -var-file="web-server.tfvars" &
+          nohup terraform -chdir=db-server apply -lock=false --auto-approve -var-file="db-server.tfvars" &
 
   # Web デプロイエラー時にクリーンアップを実行する。
       - name: Cleanp 
-        if: steps.terraform-apply-web.outcome != 'success'
+        if: steps.terraform-apply.outcome != 'success'
         run: |
           terraform apply -destroy --auto-approve -var-file="web-server.tfvars"
-          knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
-          knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
-  
-  # DB デプロイエラー時にクリーンアップを実行する。
-      - name: Cleanp 
-        if: steps.terraform-apply-db.outcome != 'success'
-        run: |
-          terraform apply -destroy --auto-approve -var-file="db-server.tfvars"
           knife node list -c .chef/config.rb | grep "demo" | xargs knife node delete -y -c .chef/config.rb
           knife client list -c .chef/config.rb | grep "demo" | xargs knife client delete -y -c .chef/config.rb
